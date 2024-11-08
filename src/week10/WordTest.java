@@ -68,8 +68,10 @@ public class WordTest {
                 while(true) {
                     System.out.print("영어 단어 (or type '그만' to stop): ");
                     eng = s.nextLine();
-                    if (eng.equals("그만"))
+                    if (eng.equals("그만")){
+                        System.out.println("단어 추가 작업 종료.\n");
                         break;
+                    }
                     System.out.print("한국어 뜻: ");
                     kor = s.nextLine();
                     wList.add(new Word(kor, eng));
@@ -79,12 +81,12 @@ public class WordTest {
                 System.out.println("단어 맞추기 게임 시작! 종료를 원하시면 '그만'을 입력하세요.");
                 while(true) {
                     int ind = (int) (Math.random() * wList.size());
-                    System.out.print("이 단어의 한국어 뜻은 " + wList.get(ind).getEng() + "?");
+                    System.out.print("이 단어의 한국어 뜻은 '" + wList.get(ind).getEng() + "'? ");
                     correctKor = s.nextLine();
                     if (correctKor.equals(wList.get(ind).getKor())) {
                         System.out.println("정답!");
                     } else if (correctKor.equals("그만")) {
-                        System.out.println("게임 종료.");
+                        System.out.println("게임 종료.\n");
                         break;
                     }else{
                         System.out.println("오답! 정답은: " + wList.get(ind).getKor());
@@ -92,7 +94,7 @@ public class WordTest {
 
                 }
             } else if (n == 3){
-                System.out.println("안녕히 가세요!");
+                System.out.print("안녕히 가세요!");
                 break;
             }
         }
