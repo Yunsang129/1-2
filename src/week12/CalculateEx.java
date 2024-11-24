@@ -20,20 +20,15 @@ public class CalculateEx extends JFrame {
 
         // 버튼 패널
         JPanel buttonPanel = new JPanel(new GridLayout(4, 4, 5, 5));
-        String[] buttons = {
-                "0", "1", "2", "3",
-                "4", "5", "6", "7",
-                "8", "9", "CE", "계산",
-                "+", "-", "x", "/"
-        };
+        String[] buttons = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "CE", "계산", "+", "-", "x", "/" };
 
-        for (String text : buttons) {
-            buttonPanel.add(new JButton(text));
-            if ("+_x/".contains(text)){
-                buttonPanel.setForeground(Color.GREEN);
-            } else {
-                buttonPanel.setForeground(Color.PINK);
+        for (int i = 0; i < buttons.length; i++) {
+            JButton button = new JButton(buttons[i]);
+
+            if (i >= 12) {  
+                button.setBackground(Color.LIGHT_GRAY);
             }
+            buttonPanel.add(button);
         }
 
         JPanel resultPanel = new JPanel(new BorderLayout());
