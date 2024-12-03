@@ -44,13 +44,13 @@ public class WordTest2 {
         wList.add(new Word("flexible", "able to change or be changed easily according to the situation"));
         wList.add(new Word("function", "to work in the correct or intended way"));
         wList.add(new Word("perspective", "a particular way of considering something"));
-        wList.add(new Word("reinforce", "to make something stronger"));
+            wList.add(new Word("reinforce", "to make something stronger"));
         wList.add(new Word("structure", "something that has been built"));
         wList.add(new Word("transform", "to change completely the appearance or character of something or someone"));
         wList.add(new Word("vast", "very great in size, amount, or extent"));
         wList.add(new Word("welfare", "physical and mental health and happiness"));
         wList.add(new Word("appreciate", "to recognize or understand that something is valuable or important"));
-        wList.add(new Word("classic", "having a high quality or standard against which other things are judged"));
+        wList.add(new Word("classic",   "having a high quality or standard against which other things are judged"));
         wList.add(new Word("creativity", "the ability to use your imagination to produce new ideas"));
         wList.add(new Word("innovative", "using new methods or ideas"));
         wList.add(new Word("purchase", "to buy something"));
