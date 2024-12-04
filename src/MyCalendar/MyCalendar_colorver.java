@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-class MyCalendar extends JFrame {
+class MyCalendar_colorver extends JFrame {
     //캘린더 객체 생성
     Calendar calendar = Calendar.getInstance();
 
@@ -18,8 +18,9 @@ class MyCalendar extends JFrame {
     //날짜를 표시하는 패널을 생성
     JPanel datePanel = new JPanel();
 
-    //메모를 저장할 해시맵 생성
+    //메모와 버튼의 색상을 결정할 해시맵을 생성
     Map<String, String> memoMap = new HashMap<>();
+    Map<String, String> colorMap = new HashMap<>();
 
     //메모필드 생성
     JTextField memoField;
@@ -32,8 +33,10 @@ class MyCalendar extends JFrame {
     //일 버튼을 클릭시 며칠인지 받아오는 변수
     String clickedDateButton;
 
+    //색을 결정하는 변수
+    String choiceColor = "";
 
-    public MyCalendar() {
+    public MyCalendar_colorver() {
         //캘린더를 2024년 11월 1일을 기준으로 설정
         calendar.set(2024, 11 - 1, 1);
 
@@ -192,13 +195,13 @@ class MyCalendar extends JFrame {
 
             //만약 메모가 비어있다면 메모가 존재하지 않는다는 알림을 띄우고, 빈 메모를 저장하지 않도록하기
             if (memo.equals("")) {
-                JOptionPane.showMessageDialog(MyCalendar.this, "저장할 메모가 존재하지 않습니다.",
+                JOptionPane.showMessageDialog(MyCalendar_colorver.this, "저장할 메모가 존재하지 않습니다.",
                         "Message", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 //해시맵에 메모와 날짜를 넣음
                 memoMap.put(ymd, memo);
                 memoField.setText("");   //메모칸 초기화
-                JOptionPane.showMessageDialog(MyCalendar.this, "메모 저장!\n" + year + "년 " + month + "월 "
+                JOptionPane.showMessageDialog(MyCalendar_colorver.this, "메모 저장!\n" + year + "년 " + month + "월 "
                         + date + "일\n" + "메모: " + memo, "Message", JOptionPane.INFORMATION_MESSAGE);
                 //달력에 체크표시를 반영하기 위해 다시 한번 setMonth() 메서드를 불러옴
                 setMonth();
@@ -213,19 +216,101 @@ class MyCalendar extends JFrame {
             //년 월을 라벨에서 가져오고, 버튼을 클릭했을 때 그 텍스트를 가져와서 날짜 텍스트를 만들기
             String clickedYMD = yearLabel.getText() + monthLabel.getText() + clickedDateButton;
 
-            // 메모가 있는지 확인하고 존재한다면 출력, 아니라면 없다는 알림을 띄우기
-            if (memoMap != null && memoMap.containsKey(clickedYMD)) {
-                String memo = memoMap.get(clickedYMD);
-                JOptionPane.showMessageDialog(null, "메모:\n" + memo, "메모 확인", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(null, "해당 날짜에 메모가 없습니다.", "메모 없음", JOptionPane.WARNING_MESSAGE);
+            //클릭했을 때 띄울 JDialog 생성
+            JDialog memoDialog = new JDialog(MyCalendar_colorver.this, "Event");
+            memoDialog.setSize(300,200);
+
+            //텍스트 라벨 생성및 배치
+            JLabel label = new JLabel(monthLabel.getText() + "월 " + clickedDateButton + "일");
+            //중간에 위치하도록 조정함
+            label.setHorizontalAlignment(SwingConstants.CENTER);
+
+            //텍스트 필드 생성 및 배치
+            JTextField memoField = new JTextField("", 30);
+            //기존 메모가 있다면 그 메모를 띄우기
+            if(memoMap.containsKey(clickedYMD)){
+                memoField.setText(memoMap.get(clickedYMD));
             }
+
+            //세 버튼을 한 번에 저장할 패널 생성
+            JPanel threeButtonPanel = new JPanel();
+            //가로로 배치하기
+            threeButtonPanel.setLayout(new GridLayout(1,0));
+            //버튼 세 개를 생성 후 셋 중 한 버튼만 선택할 수 있게 메서드를 짬
+            //choiceColor를 이용해 향후 완료 버튼을 눌렀을 때 날짜가 어떤 색으로 정해져야 하는지 정함
+
+            JButton first = new JButton("진행 전");
+            JButton second = new JButton("진행 중");
+            JButton third = new JButton("완료");
+            first.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    first.setEnabled(false);
+                    second.setEnabled(true);
+                    third.setEnabled(true);
+                    choiceColor = "RED";
+                }
+            });
+            second.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    second.setEnabled(false);
+                    third.setEnabled(true);
+                    first.setEnabled(true);
+                    choiceColor = "ORANGE";
+                }
+            });
+            third.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    first.setEnabled(true);
+                    second.setEnabled(true);
+                    third.setEnabled(false);
+                    choiceColor = "GREEN";
+                }
+            });
+
+            threeButtonPanel.add(first);
+            threeButtonPanel.add(second);
+            threeButtonPanel.add(third);
+
+            //완료 버튼 생성
+            JButton doneButton = new JButton("완료");
+            doneButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    //만약 메모필드가 비어있으면 그대로 종료함
+                    if (memoField.getText().equals("")) {
+                        memoDialog.dispose();
+
+                    //만약 아무 버튼도 눌리지 않았다면 그냥 메모만 저장함
+                    }else if(choiceColor.equals("")) {
+                        memoMap.put(clickedYMD, memoField.getText());
+                        setMonth();
+                        memoDialog.dispose();
+
+                    //위의 두 경우가 아니라면 색과 메모를 모두 저장함
+                    }else{
+                        memoMap.put(clickedYMD, memoField.getText());
+                        colorMap.put(clickedYMD, choiceColor);
+                        choiceColor = "";
+                        setMonth();
+                        memoDialog.dispose();
+                    }
+                }
+            });
+
+            //JDialog의 배치를 세로 배치로 하고 이후에 모든 요소를 추가한 뒤 보이도록 함
+            memoDialog.setLayout(new GridLayout(0, 1));
+            memoDialog.add(label);
+            memoDialog.add(memoField);
+            memoDialog.add(threeButtonPanel);
+            memoDialog.add(doneButton);
+            memoDialog.setVisible(true);
+
         }
+
     }
 
     //실행
     public static void main(String[] args) {
-        new MyCalendar();
+        new MyCalendar_colorver();
     }
 
     //달을 갱신하는 메서드
@@ -255,10 +340,25 @@ class MyCalendar extends JFrame {
 
 
             String buttonText = String.valueOf(date);
-            if (memoMap.containsKey(String.valueOf(year) + String.valueOf(month + 1) + String.valueOf(date))) {
+
+            //현재 연월일을 쭉 이어붙인 스트링으로 생성
+            String detailDate = String.valueOf(year) + String.valueOf(month + 1) + String.valueOf(date);
+            //만약 memoMap이 key(현재 연월일)를 가지고 있다면 button의 텍스트에 ✓ 표시를 추가함
+            if (memoMap.containsKey(detailDate)) {
                 buttonText += " ✓";
             }
             dateButton.setText(buttonText);
+
+            //만약 colorMap이 key(현재 연월일)를 가지고 있다면 그 value값에 따라 버튼의 Text의 색을 수정함
+            if (colorMap.containsKey(detailDate)) {
+                if (colorMap.get(detailDate).equals("RED")){
+                    dateButton.setForeground(Color.RED);
+                } else if (colorMap.get(detailDate).equals("ORANGE")){
+                    dateButton.setForeground(Color.ORANGE);
+                } else if (colorMap.get(detailDate).equals("GREEN")){
+                    dateButton.setForeground(Color.GREEN);
+                }
+            }
 
             //date를 가져오기 위해서 dateButton을 눌렀을 때 숫자를 가져오는 이벤트와 동시에 메모확인을 호출함
             dateButton.addActionListener(new ActionListener() {
