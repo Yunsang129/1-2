@@ -17,6 +17,7 @@ public class borrowBook {
             System.out.println("4. 종료");
             System.out.printf("선택: ");
             int number = scanner.nextInt();
+            //int라서 다른 문자들이 입력되었을 때 오류를 일으킬 수 있기 때문에 String으로 했어야..
             scanner.nextLine();
             if (number == 1) {
                 System.out.print("책 제목: ");
